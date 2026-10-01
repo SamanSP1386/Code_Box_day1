@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Study/Stacks — Cal Poly SLO</title>
+  <meta name="description" content="A members-only, crowdsourced catalog of study spots at Cal Poly San Luis Obispo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <span class="brand__mark">STUDY<span class="brand__slash">/</span>STACKS</span>
+        <span class="brand__tag">Cal Poly SLO</span>
+      </div>
+      <div class="topbar__right">
+        <div class="live-pill" title="Refreshes automatically">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>LIVE</span>
+          <span class="live-pill__clock" id="clock">--:--:--</span>
+        </div>
+        <div id="authSlot"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Screen 1: logged out -->
+    <section class="gate" id="gateScreen">
+      <div class="gate__inner">
+        <div class="gate__copy">
+          <p class="eyebrow">Cal Poly San Luis Obispo &middot; members only</p>
+          <h1>Every seat has<br />a story.</h1>
+          <p class="gate__sub">STUDY/STACKS is a living catalog of campus study spots, kept honest by the
+            Mustangs who actually sit in them. Get your card to see what's open right now.</p>
+          <button class="btn btn--gold" id="gateLoginBtn">Get your card &rarr;</button>
+        </div>
+        <div class="gate__card-stage">
+          <div class="id-card id-card--blank" aria-hidden="true">
+            <div class="id-card__top">
+              <div class="id-card__seal">SLO</div>
+              <div class="id-card__label">Cal Poly<br />San Luis Obispo</div>
+            </div>
+            <div class="id-card__name id-card__name--placeholder">Your&nbsp;Name&nbsp;Here</div>
+            <div class="id-card__rows">
+              <div class="id-card__row"><span>Major</span><strong>—</strong></div>
+              <div class="id-card__row"><span>Class</span><strong>—</strong></div>
+            </div>
+            <div class="id-card__footer">
+              <span class="id-card__issued">NOT YET ISSUED</span>
+              <span class="id-card__barcode"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 2: logged in, no profile yet -->
+    <section class="onboard" id="onboardScreen" hidden>
+      <div class="onboard__inner">
+        <div class="onboard__form">
+          <p class="eyebrow">One-time setup</p>
+          <h1>Issue your card.</h1>
+          <p class="onboard__sub">This is how other Mustangs will see your reports. Watch it fill in as you type.</p>
+          <form id="onboardForm">
+            <div class="field-row">
+              <label class="field">
+                <span>First name</span>
+                <input id="obFirstName" autocomplete="given-name" required />
+              </label>
+              <label class="field">
+                <span>Last name</span>
+                <input id="obLastName" autocomplete="family-name" required />
+              </label>
+            </div>
+            <label class="field">
+              <span>Major</span>
+              <input id="obMajor" placeholder="e.g. Computer Science" required />
+            </label>
+            <label class="field">
+              <span>Class year</span>
+              <select id="obYear" required>
+                <option value="" disabled selected>Select one</option>
+                <option>Freshman</option>
+                <option>Sophomore</option>
+                <option>Junior</option>
+                <option>Senior</option>
+                <option>Grad Student</option>
+              </select>
+            </label>
+            <button type="submit" class="btn btn--gold btn--block">Issue my card</button>
+          </form>
+        </div>
+        <div class="onboard__preview">
+          <div class="id-card" id="idCardPreview">
+            <div class="id-card__top">
+              <div class="id-card__seal">SLO</div>
+              <div class="id-card__label">Cal Poly<br />San Luis Obispo</div>
+            </div>
+            <div class="id-card__name" id="previewName">Your Name Here</div>
+            <div class="id-card__rows">
+              <div class="id-card__row"><span>Major</span><strong id="previewMajor">—</strong></div>
+              <div class="id-card__row"><span>Class</span><strong id="previewYear">—</strong></div>
+            </div>
+            <div class="id-card__footer">
+              <span class="id-card__issued" id="previewIssued"></span>
+              <span class="id-card__barcode"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 3: logged in, card issued -->
+    <section class="board-wrap" id="appScreen" hidden>
+      <section class="hero">
+        <div class="hero__inner">
+          <p class="eyebrow">Cal Poly San Luis Obispo &middot; crowdsourced, real&#8209;time</p>
+          <h1>Know before you go.</h1>
+          <p class="hero__sub">Real reports from real Mustangs on which study spots are actually free right now &mdash; no more walking to the 4th floor just to find it packed.</p>
+          <div class="hero__actions">
+            <button class="btn btn--gold" id="openAddSpot">
+              <span aria-hidden="true">+</span> Report a spot
+            </button>
+            <div class="stat-readout">
+              <span class="stat-readout__num" id="spotCount">00</span>
+              <span class="stat-readout__label">spots on record</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="board">
+        <div class="board__header">
+          <div class="filter-groups">
+            <div class="filter-group">
+              <span class="filter-group__label">Status</span>
+              <div class="filters" role="group" aria-label="Filter by crowd level">
+                <button class="chip is-active" data-filter-type="crowd" data-filter="all">All</button>
+                <button class="chip" data-filter-type="crowd" data-filter="empty">Quiet</button>
+                <button class="chip" data-filter-type="crowd" data-filter="moderate">Busy</button>
+                <button class="chip" data-filter-type="crowd" data-filter="crowded">Full</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span class="filter-group__label">Where</span>
+              <div class="filters" role="group" aria-label="Filter by location">
+                <button class="chip is-active" data-filter-type="location" data-filter="all">All</button>
+                <button class="chip" data-filter-type="location" data-filter="on_campus">On campus</button>
+                <button class="chip" data-filter-type="location" data-filter="off_campus">Off campus</button>
+              </div>
+            </div>
+          </div>
+          <p class="board__hint">Tap <strong>I'm here</strong> on a card to update its status.</p>
+        </div>
+
+        <ul class="catalog" id="catalog" aria-live="polite"></ul>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <p class="empty-state__title">No spots on file for this filter.</p>
+          <p class="empty-state__sub">Be the first to report one — it takes ten seconds.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Built for Demo Day &middot; Express + Supabase (Postgres + Auth) &middot; not an official Cal Poly product</p>
+  </footer>
+
+  <!-- Login modal -->
+  <div class="modal-backdrop" id="loginBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button class="modal__close" data-close-modal aria-label="Close">&times;</button>
+      <h2 id="loginTitle">Get your card</h2>
+      <p class="modal__sub" id="loginSub">We'll email you a secure sign-in link &mdash; no password needed.</p>
+
+      <form id="emailForm">
+        <label class="field">
+          <span>Email</span>
+          <input id="loginEmail" name="email" type="email" autocomplete="email" required />
+        </label>
+        <button type="submit" class="btn btn--forest btn--block">Send sign-in link</button>
+      </form>
+
+      <div class="hint" id="linkSentPanel" hidden>
+        Check <strong id="sentToEmail"></strong> for the link. You can close this window &mdash;
+        you'll be signed in automatically as soon as you click it.
+      </div>
+      <button type="button" class="btn btn--ghost btn--block" id="changeEmailBtn" hidden>Use a different email</button>
+    </div>
+  </div>
+
+  <!-- Add spot modal -->
+  <div class="modal-backdrop" id="addBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+      <button class="modal__close" data-close-modal aria-label="Close">&times;</button>
+      <h2 id="addTitle">Report a spot</h2>
+      <p class="modal__sub">Add a real place on campus so other Mustangs know it exists.</p>
+      <form id="addForm">
+        <label class="field">
+          <span>Spot name</span>
+          <input id="newName" name="name" placeholder="e.g. 4th Floor Reading Room" required />
+        </label>
+        <label class="field">
+          <span>Building</span>
+          <input id="newBuilding" name="building" placeholder="e.g. Kennedy Library" required />
+        </label>
+        <label class="field">
+          <span>Location</span>
+          <select id="newLocation" name="location_type">
+            <option value="on_campus" selected>On campus</option>
+            <option value="off_campus">Off campus</option>
+          </select>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Current crowd</span>
+            <select id="newCrowd" name="crowd_level">
+              <option value="empty">Quiet</option>
+              <option value="moderate">Busy</option>
+              <option value="crowded">Full</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Noise level</span>
+            <select id="newNoise" name="noise_level">
+              <option value="silent">Silent</option>
+              <option value="quiet" selected>Quiet</option>
+              <option value="moderate">Moderate</option>
+              <option value="loud">Loud</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="btn btn--gold btn--block">Add to the catalog</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="assertive"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="spot-art.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

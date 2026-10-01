@@ -1,11 +1,6 @@
-const jwt = require("jsonwebtoken");
+const { getAnonClient } = require("../supabaseClient");
 
-function requireAuth(req, res, next) {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error("JWT_SECRET is not set. Add it to your .env file.");
-  }
-
+async function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization || "";
   const [scheme, token] = authHeader.split(" ");
 
@@ -13,12 +8,15 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: "Missing token" });
   }
 
-  try {
-    req.user = jwt.verify(token, secret, { algorithms: ["HS256"] });
-    next();
-  } catch (err) {
+  const { data, error } = await getAnonClient().auth.getUser(token);
+
+  if (error || !data.user) {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
+
+  req.user = { id: data.user.id, email: data.user.email };
+  req.token = token;
+  next();
 }
 
 module.exports = requireAuth;
